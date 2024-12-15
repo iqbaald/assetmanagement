@@ -7,12 +7,19 @@ body{background-color: var(--color-bg)!important;}
 
 
 .btx{line-height: normal;padding:12px 16px;display:inline-block;border-radius:8px;font-weight:600;transition:.3s all ease-in-out}
+.btx span{padding-right:4px}
 .btx-primary{background: var(--color-main);color: #fff;border: 1px solid var(--color-main);}
 .btx-primary:hover{background: transparent;color: var(--color-main);border: 1px solid var(--color-main);}
 .btx-trans{background:transparent;color:var(--color-main);border:1px solid var(--color-main)}
 .btx-trans:hover{background:var(--color-main);color:#fff;border:1px solid var(--color-main)}
 
 .navbar-main{background-color: #fff;}
+
+.table{color:black}
+.table>thead{background: var(--color-main);}
+.table td{padding: 1rem 0 !important;}
+
+.head-text h1{padding:0 0 30px;font-size:30px;text-align:center;color:var(--color-main)}
 
 
 @media (max-width:768px){

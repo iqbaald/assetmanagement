@@ -36,6 +36,10 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('add', function () {
 		return view('add');
 	})->name('add');
+	
+	Route::get('see', function () {
+		return view('see');
+	})->name('see');
 
 	Route::get('user-management', function () {
 		return view('laravel-examples/user-management');

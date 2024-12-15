@@ -8,7 +8,7 @@
     <div class="row justify-content-center align-items-center">
       <div class="col-8">
         <div class="head-text text-weight-bolder">
-          <h1>Tambah Barang</h1>
+          <h1>Edit Barang</h1>
           <a href="{{ route('dashboard') }}" class="btx btx-primary px-5">Kembali</a>
         </div>
         <div class="card">
@@ -42,7 +42,7 @@
               </div>
 
               <div class="row g-3 mb-4">
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <label for="kategori_barang" class="form-label">Kategori Barang</label>
                   <select class="form-select" id="kategori_barang" name="kategori_barang" required>
                     <option selected disabled>-- Pilih salah satu --</option>
@@ -51,7 +51,7 @@
                     <option value="Perlengkapan">Perlengkapan</option>
                   </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <label for="lokasi_barang" class="form-label">Lokasi Barang</label>
                   <select class="form-select" id="lokasi_barang" name="lokasi_barang" required>
                     <option selected disabled>-- Pilih salah satu --</option>
@@ -59,7 +59,14 @@
                     <option value="Ruang Kantor">Ruang Kantor</option>
                   </select>
                 </div>
-                <div class="col-md-4">
+              </div>
+
+              <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                  <label for="harga_jual" class="form-label">Harga Jual</label>
+                  <input type="number" class="form-control" id="harga_jual" name="harga_jual" placeholder="Rp" required>
+                </div>
+                <div class="col-md-6">
                   <label for="foto_barang" class="form-label">Upload Foto Barang</label>
                   <input type="file" class="form-control" id="foto_barang" name="foto_barang" accept="image/*" required>
                   <small class="text-muted">Maksimal ukuran foto 2 MB</small>
@@ -67,7 +74,7 @@
               </div>
 
               <div class="text-center">
-                <button type="submit" class="btx btx-primary px-5">Submit Barang</button>
+                <button type="submit" class="btx btx-primary px-5">Edit Barang</button>
               </div>
             </form>
           </div>

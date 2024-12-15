@@ -19,9 +19,11 @@ body{background-color: var(--color-bg)!important;}
 .table>thead{background: var(--color-main);}
 .table td{padding: 1rem 0 !important;}
 
-.head-text h1{padding:0 0 30px;font-size:30px;text-align:center;color:var(--color-main)}
+.head-text{padding:0;display: flex;justify-content: space-between;margin-bottom: 24px;align-items: center;}
+.head-text h1{font-size:30px;text-align:center;color:var(--color-main);align-items: center;}
 
-.form-control{    border: 1px solid #A899FF!important;border-radius: .5rem!important;}
+.form-control{border: 1px solid #A899FF!important;border-radius: .5rem!important;}
+.form-control:focus{border-color: #A899FF!important; box-shadow: 0 0 0 2px #5d43ff75!important;}
 
 @media (max-width:768px){
   .mobhide{display:none}

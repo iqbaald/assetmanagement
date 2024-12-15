@@ -59,7 +59,7 @@
                       <span class="text-s font-weight-bold mb-0">Pengharum</span>
                     </td>
                     <td>
-                      <a href="#" class="btx btx-primary mb-0 text-s">Lihat Barang</a>
+                      <a href="{{ route('see') }}" class="btx btx-primary mb-0 text-s">Lihat Barang</a>
                     </td>
                     
                   </tr>
@@ -86,7 +86,7 @@
                       <span class="text-s font-weight-bold mb-0">Pengharum</span>
                     </td>
                     <td>
-                      <a href="#" class="btx btx-primary mb-0 text-s">Lihat Barang</a>
+                      <a href="{{ route('see') }}" class="btx btx-primary mb-0 text-s">Lihat Barang</a>
                     </td>
                     
                   </tr>

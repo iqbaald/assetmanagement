@@ -10,7 +10,7 @@
           <div class="row justify-content-center">
             <div class="col-lg-5 text-center mx-auto">
               <h1 class="text-white mb-2 mt-5">Selamat Datang</h1>
-              <p class="text-lead text-white">Kamu bisa coba login menggunakan akun <b>admin</b> dan password <b>admin</b> untuk mencoba aplikasi ini.</p>
+              <p class="text-lead text-white">Kamu bisa coba login menggunakan akun <b>admin@softui.com</b> dan password <b>secret</b> untuk mencoba aplikasi ini.</p>
             </div>
           </div>
         </div>

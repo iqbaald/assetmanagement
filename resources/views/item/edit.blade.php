@@ -9,35 +9,36 @@
       <div class="col-8">
         <div class="head-text text-weight-bolder">
           <h1>Edit Barang</h1>
-          <a href="{{ route('dashboard') }}" class="btx btx-primary px-5">Kembali</a>
+          <a href="{{ route('item.index') }}" class="btx btx-primary px-5">Kembali</a>
         </div>
         <div class="card">
           <div class="card-body">
-            <form action="#" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('item.update', $item->id) }}" method="POST">
               @csrf
+              @method('PUT')
               <div class="row g-3 mb-3">
                 <div class="col-md-3">
                   <label for="id_barang" class="form-label">ID Barang</label>
-                  <input type="text" class="form-control" id="id_barang" name="id_barang" placeholder="#" required>
+                  <input type="text" class="form-control" id="id_barang" name="id_barang" value="{{ $item->id }}" placeholder="#" readonly>
                 </div>
                 <div class="col-md-9">
                   <label for="nama_barang" class="form-label">Nama Barang</label>
-                  <input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="Masukkan nama barang..." required>
+                  <input type="text" class="form-control" id="nama_barang" name="nama_barang" value="{{ $item->itemName }}" placeholder="Masukkan nama barang..." required>
                 </div>
               </div>
 
               <div class="row g-3 mb-3">
                 <div class="col-md-4">
                   <label for="kondisi_barang" class="form-label">Kondisi Barang (%)</label>
-                  <input type="number" class="form-control" id="kondisi_barang" name="kondisi_barang" min="0" max="100" placeholder="Contoh: 85" required>
+                  <input type="number" class="form-control" id="kondisi_barang" name="kondisi_barang" value="{{ $item->conditionPercentage }}" min="0" max="100" placeholder="Contoh: 85" required>
                 </div>
                 <div class="col-md-4">
                   <label for="tanggal_beli" class="form-label">Tanggal Beli</label>
-                  <input type="date" class="form-control" id="tanggal_beli" name="tanggal_beli" required>
+                  <input type="date" class="form-control" id="tanggal_beli" name="tanggal_beli" value="{{ $item->purchaseDate }}" required>
                 </div>
                 <div class="col-md-4">
                   <label for="harga_beli" class="form-label">Harga Beli</label>
-                  <input type="number" class="form-control" id="harga_beli" name="harga_beli" placeholder="Rp" required>
+                  <input type="number" class="form-control" id="harga_beli" name="harga_beli" value="{{ $item->purchasePrice }}" placeholder="Rp" required>
                 </div>
               </div>
 
@@ -46,17 +47,22 @@
                   <label for="kategori_barang" class="form-label">Kategori Barang</label>
                   <select class="form-select" id="kategori_barang" name="kategori_barang" required>
                     <option selected disabled>-- Pilih salah satu --</option>
-                    <option value="Elektronik">Elektronik</option>
-                    <option value="Furnitur">Furnitur</option>
-                    <option value="Perlengkapan">Perlengkapan</option>
+                      @foreach($categories as $category)
+                        <option value="{{ $category->categoryId }}" {{ $item->categoryId == $category->categoryId ? 'selected' : '' }}>
+                          {{ $category->categoryName }}
+                        </option>
+                      @endforeach
                   </select>
                 </div>
                 <div class="col-md-6">
                   <label for="lokasi_barang" class="form-label">Lokasi Barang</label>
                   <select class="form-select" id="lokasi_barang" name="lokasi_barang" required>
                     <option selected disabled>-- Pilih salah satu --</option>
-                    <option value="Gudang Utama">Gudang Utama</option>
-                    <option value="Ruang Kantor">Ruang Kantor</option>
+                      @foreach($locations as $location)
+                        <option value="{{ $location->locationId }}" {{ $item->locationId == $location->locationId ? 'selected' : '' }}>
+                          {{ $location->locationName }}
+                        </option>
+                      @endforeach
                   </select>
                 </div>
               </div>
@@ -64,12 +70,17 @@
               <div class="row g-3 mb-4">
                 <div class="col-md-6">
                   <label for="harga_jual" class="form-label">Harga Jual</label>
-                  <input type="number" class="form-control" id="harga_jual" name="harga_jual" placeholder="Rp" required>
+                  <input type="number" class="form-control" id="harga_jual" name="harga_jual" value="{{ $sellingPrice }}" placeholder="Rp" readonly>
                 </div>
                 <div class="col-md-6">
                   <label for="foto_barang" class="form-label">Upload Foto Barang</label>
-                  <input type="file" class="form-control" id="foto_barang" name="foto_barang" accept="image/*" required>
-                  <small class="text-muted">Maksimal ukuran foto 2 MB</small>
+                  <input type="file" class="form-control" id="foto_barang" name="foto_barang" accept="image/*">
+                  @if($item->itemPhoto)
+                    <p>Foto saat ini: <strong>{{ $item->itemPhoto }}</strong></p>
+                  @else
+                    <p>Tidak ada foto yang diupload.</p>
+                  @endif
+                    <small class="text-muted">Maksimal ukuran foto 2 MB</small>
                 </div>
               </div>
 

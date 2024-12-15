@@ -36,60 +36,35 @@
                   </tr>
                 </thead>
                 <tbody>
+                  @foreach($items as $item)
                   <tr>
                     <td class="align-middle font-weight-bold text-center text-s">
-                      <span>#001</span>
+                      <span>{{ $item->id }}</span>
                     </td>
                     <td class="align-middle text-center text-s">
-                      <img src="../assets/img/team-2.jpg" class="avatar avatar-xl" alt="">
+                      <img src="../assets/img/{{ $item->itemPhoto }}" class="avatar avatar-xl" alt="">
                     </td>
                     <td>
-                      <span class="text-s font-weight-bold mb-0">Stella Aerosol Orange 400ml</span>
+                      <span class="text-s font-weight-bold mb-0">{{ $item->itemName }}</span>
                     </td>
                     <td class="align-middle text-center text-s font-weight-bold">
-                      <span>60%</span>
+                      <span>{{ $item->conditionPercentage }}%</span>
                     </td>
                     <td>
-                      <span class="text-s font-weight-bold mb-0">1 November 2024</span>
+                      <span class="text-s font-weight-bold mb-0">{{ $item->purchaseDate }}</span>
                     </td>
                     <td>
-                      <span class="text-s font-weight-bold mb-0">Ruang Tengah</span>
+                      <span class="text-s font-weight-bold mb-0">{{ $item->location->locationName ?? 'N/A' }}</span>
                     </td>
                     <td>
-                      <span class="text-s font-weight-bold mb-0">Pengharum</span>
+                      <span class="text-s font-weight-bold mb-0">{{ $item->category->categoryName ?? 'N/A' }}</span>
                     </td>
                     <td>
-                      <a href="{{ route('see') }}" class="btx btx-primary mb-0 text-s">Lihat Barang</a>
+                      <a href="{{ route('item.edit' , $item->id) }}" class="btx btx-primary mb-0 text-s">Lihat Barang</a>
                     </td>
                     
                   </tr>
-                  <tr>
-                    <td class="align-middle font-weight-bold text-center text-s">
-                      <span>#001</span>
-                    </td>
-                    <td class="align-middle text-center text-s">
-                      <img src="../assets/img/team-2.jpg" class="avatar avatar-xl" alt="">
-                    </td>
-                    <td>
-                      <span class="text-s font-weight-bold mb-0">Stella Aerosol Orange 400ml</span>
-                    </td>
-                    <td class="align-middle text-center text-s font-weight-bold">
-                      <span>60%</span>
-                    </td>
-                    <td>
-                      <span class="text-s font-weight-bold mb-0">1 November 2024</span>
-                    </td>
-                    <td>
-                      <span class="text-s font-weight-bold mb-0">Ruang Tengah</span>
-                    </td>
-                    <td>
-                      <span class="text-s font-weight-bold mb-0">Pengharum</span>
-                    </td>
-                    <td>
-                      <a href="{{ route('see') }}" class="btx btx-primary mb-0 text-s">Lihat Barang</a>
-                    </td>
-                    
-                  </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>

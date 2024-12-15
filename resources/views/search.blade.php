@@ -4,9 +4,19 @@
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
   <div class="container-fluid py-4">
-    <div class="head-text text-weight-bolder">
-      <h1>Semua Barang</h1>
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-body input-group gap-4">
+            <input type="text" class="form-control" placeholder="Ketik nama barang disini..." aria-label="Ketik nama barang disini..." aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button class="btx btx-primary" type="button">Cari</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
     <div class="row">
       <div class="col-12">
         <div class="card mb-4">

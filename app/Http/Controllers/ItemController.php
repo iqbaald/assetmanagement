@@ -7,6 +7,7 @@ use App\Models\Item;
 use App\Models\Location;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
@@ -17,22 +18,40 @@ class ItemController extends Controller
         return view('dashboard', compact('items'));
     }
 
+    public function showSearchPage()
+    {
+        $items = Item::latest()->paginate(10);
+        return view('item.search', compact('items'));
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('q');
+        $items = Item::where('itemName', 'LIKE', "%{$query}%")->get();
+        return view('item.search', compact('items'));
+    }
+
     public function store(Request $request)
     {
+        dd($request->all());
+
+
         $request->validate([
             'itemName' => 'required|string|max:255',
             'itemPhoto' => 'nullable|string|mimes:jpeg,png,jpg,gif|max:2048',
-            'conditionPercentage' => 'required|integer|min:max:100',
+            'conditionPercentage' => 'required|integer|min:0|:max:100',
             'purchaseDate' => 'required|date',
             'purchasePrice' => 'required|numeric',
             'categoryId' => 'required|exists:category,categoryId',
-            'locationId' => 'required|exists:category,locationId',
+            'locationId' => 'required|exists:location,locationId',
         ]);
 
         if ($request->hasFile('itemPhoto')) {
             $file = $request->file('itemPhoto');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('assets/img'), $filename);
+        } else {
+            dd('File tidak ada');
         }
         Item::create([
             'itemName' => $request->itemName,
@@ -43,7 +62,19 @@ class ItemController extends Controller
             'categoryId' => $request->categoryId,
             'locationId' => $request->locationId,
         ]);
-        return redirect()->route('item.index')->with('success', 'Data Barang Telah Berhasil Ditambahkan.');
+
+        $categories = Category::all();
+        $locations = Location::all();
+
+        return redirect()->route('item.create' ,compact('categories', 'locations'))->with('success', 'Data Barang Telah Berhasil Ditambahkan.');
+    }
+
+    public function create()
+    {
+        $categories = Category::all(); 
+        $locations = Location::all(); 
+
+        return view('item.add', compact('categories', 'locations'));
     }
 
     public function edit($id)
@@ -74,50 +105,43 @@ class ItemController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    // Validasi input
-    $request->validate([
-        'itemName' => 'required|string|max:255',
-        'foto_barang' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        'conditionPercentage' => 'required|integer|min:0|max:100',
-        'purchaseDate' => 'required|date',
-        'purchasePrice' => 'required|numeric',
-        'categoryId' => 'required|exists:category,categoryId',
-        'locationId' => 'required|exists:location,locationId',
-    ]);
+    {
+        $request->validate([
+            'itemName' => 'required|string|max:255',
+            'conditionPercentage' => 'required|numeric|min:0|max:100', 
+            'purchaseDate' => 'required|date', 
+            'purchasePrice' => 'required|numeric|min:0', 
+            'categoryId' => 'required|exists:categories,id', 
+            'locationId' => 'required|exists:locations,id',
+            'itemPhoto' => 'nullable|image|max:2048', 
+        ]);
 
-    // Mencari item berdasarkan ID
-    $item = Item::findOrFail($id);
+        $item = Item::findOrFail($id);
+        dd($item);  
 
-    // Memproses upload foto jika ada
-    if ($request->hasFile('foto_barang')) {
-        // Hapus foto lama jika ada
-        if ($item->itemPhoto) {
-            $oldPhotoPath = public_path('assets/img/' . $item->itemPhoto);
-            if (file_exists($oldPhotoPath)) {
-                unlink($oldPhotoPath); // Menghapus file lama
-            }
-        }
+        $item->itemName = $request->itemName;
+        $item->conditionPercentage = $request->conditionPercentage;
+        $item->purchaseDate = $request->purchaseDate;
+        $item->purchasePrice = $request->purchasePrice;
+        $item->categoryId = $request->categoryId;
+        $item->locationId = $request->locationId;
 
-        // Menyimpan foto baru
-        $file = $request->file('foto_barang');
-        $filename = time() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('assets/img'), $filename); // Simpan di folder public/assets/img
-        $item->itemPhoto = $filename; // Update nama file di item
+        // if ($request->hasFile('itemPhoto')) {
+        //     if ($item->itemPhoto) {
+        //         Storage::delete('public/photos/' . $item->itemPhoto);
+        //     }
+
+        //     $fileName = time() . '_' . $request->file('itemPhoto')->getClientOriginalName();
+        //     $request->file('itemPhoto')->storeAs('public/photos', $fileName);
+        //     $item->itemPhoto = $fileName;
+        // }
+
+        
+        $item->save();
+
+
+        return redirect()->route('item.index')->with('success', 'Data barang berhasil diupdate!');
     }
-
-    // Update item dengan atribut yang relevan
-    $item->update([
-        'itemName' => $request->itemName,
-        'conditionPercentage' => $request->conditionPercentage,
-        'purchaseDate' => $request->purchaseDate,
-        'purchasePrice' => $request->purchasePrice,
-        'categoryId' => $request->categoryId,
-        'locationId' => $request->locationId,
-    ]);
-
-    return redirect()->route('item.index')->with('success', 'Item updated successfully.');
-}
 
     public function destroy(string $id)
     {

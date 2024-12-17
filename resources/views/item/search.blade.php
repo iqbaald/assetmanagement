@@ -2,92 +2,79 @@
 
 @section('content')
 
-<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
   <div class="container-fluid py-4">
-
-    <div class="row justify-content-center align-items-center">
-      <div class="col-8">
-        <div class="head-text text-weight-bolder">
-          <h1>Edit Barang</h1>
-          <a href="{{ route('item.index') }}" class="btx btx-primary px-5">Kembali</a>
-        </div>
-        <div class="card">
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
           <div class="card-body">
-            <form action="{{ route('item.update', $item->id) }}" method="POST">
-              @csrf
-              @method('PUT')
-              <div class="row g-3 mb-3">
-                <div class="col-md-3">
-                  <label for="id" class="form-label">ID Barang</label>
-                  <input type="text" class="form-control" id="id" name="id" value="{{ $item->id }}" placeholder="#" readonly>
-                </div>
-                <div class="col-md-9">
-                  <label for="itemName" class="form-label">Nama Barang</label>
-                  <input type="text" class="form-control" id="itemName" name="itemName" value="{{ $item->itemName }}" placeholder="Masukkan nama barang..." required>
-                </div>
-              </div>
-
-              <div class="row g-3 mb-3">
-                <div class="col-md-4">
-                  <label for="conditionPercentage" class="form-label">Kondisi Barang (%)</label>
-                  <input type="number" class="form-control" id="conditionPercentage" name="conditionPercentage" value="{{ $item->conditionPercentage }}" min="0" max="100" placeholder="Contoh: 85" required>
-                </div>
-                <div class="col-md-4">
-                  <label for="purchaseDate" class="form-label">Tanggal Beli</label>
-                  <input type="date" class="form-control" id="purchaseDate" name="purchaseDate" value="{{ $item->purchaseDate }}" required>
-                </div>
-                <div class="col-md-4">
-                  <label for="purchasePrice" class="form-label">Harga Beli</label>
-                  <input type="number" class="form-control" id="purchasePrice" name="purchasePrice" value="{{ $item->purchasePrice }}" placeholder="Rp" required>
-                </div>
-              </div>
-
-              <div class="row g-3 mb-4">
-                <div class="col-md-6">
-                  <label for="categoryId" class="form-label">Kategori Barang</label>
-                  <select class="form-select" id="categoryId" name="categoryId" required>
-                    <option selected disabled>-- Pilih salah satu --</option>
-                      @foreach($categories as $category)
-                        <option value="{{ $category->categoryId }}" {{ $item->categoryId == $category->categoryId ? 'selected' : '' }}>
-                          {{ $category->categoryName }}
-                        </option>
-                      @endforeach
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label for="locationId" class="form-label">Lokasi Barang</label>
-                  <select class="form-select" id="locationId" name="locationId" required>
-                    <option selected disabled>-- Pilih salah satu --</option>
-                      @foreach($locations as $location)
-                        <option value="{{ $location->locationId }}" {{ $item->locationId == $location->locationId ? 'selected' : '' }}>
-                          {{ $location->locationName }}
-                        </option>
-                      @endforeach
-                  </select>
-                </div>
-              </div>
-
-              <div class="row g-3 mb-4">
-                <div class="col-md-6">
-                  <label for="sellingPrice" class="form-label">Harga Jual</label>
-                  <input type="number" class="form-control" id="sellingPrice" name="sellingPrice" value="{{ $sellingPrice }}" placeholder="Rp" readonly>
-                </div>
-                <div class="col-md-6">
-                  <label for="itemPhoto" class="form-label">Upload Foto Barang</label>
-                  <input type="file" class="form-control" id="itemPhoto" name="itemPhoto" accept="image/*">
-                  @if($item->itemPhoto)
-                    <p>Foto saat ini: <strong>{{ $item->itemPhoto }}</strong></p>
-                  @else
-                    <p>Tidak ada foto yang diupload.</p>
-                  @endif
-                    <small class="text-muted">Maksimal ukuran foto 2 MB</small>
-                </div>
-              </div>
-
-              <div class="text-center">
-                <button type="submit" class="btx btx-primary px-5">Edit Barang</button>
+            <form action="{{ route('item.search') }}" class="input-group gap-4" method="GET">
+              <input type="text" name="q" class="form-control" placeholder="Ketik nama barang disini..." aria-label="Ketik nama barang disini..." aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btx btx-primary" type="button">Cari</button>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-body px-0 pt-0 pb-2">
+            <div class="table-responsive p-1 p-sm-4">
+              <table class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-center text-uppercase text-white text-s font-weight-bold">ID</th>
+                    <th class="text-center text-uppercase text-white text-s font-weight-bold">Foto Barang</th>
+                    <th class="text-uppercase text-white text-s font-weight-bold p-0">Nama</th>
+                    <th class="text-center text-uppercase text-white text-s font-weight-bold">Kondisi</th>
+                    <th class="text-uppercase text-white text-s font-weight-bold p-0">Tanggal Beli</th>
+                    <th class="text-uppercase text-white text-s font-weight-bold p-0">Lokasi</th>
+                    <th class="text-uppercase text-white text-s font-weight-bold p-0">Kategori</th>
+                    <th class="text-white"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if($items->isEmpty())
+                      <tr>
+                          <td colspan="8" class="text-center">Tidak ada barang ditemukan.</td>
+                      </tr>
+                  @else
+                      @foreach($items as $item)
+                      <tr>
+                          <td class="align-middle font-weight-bold text-center text-s">
+                              <span>{{ $item->id }}</span>
+                          </td>
+                          <td class="align-middle text-center text-s">
+                              <img src="../assets/img/{{ $item->itemPhoto }}" class="avatar avatar-xl" alt="">
+                          </td>
+                          <td>
+                              <span class="text-s font-weight-bold mb-0">{{ $item->itemName }}</span>
+                          </td>
+                          <td class="align-middle text-center text-s font-weight-bold">
+                              <span>{{ $item->conditionPercentage }}%</span>
+                          </td>
+                          <td>
+                              <span class="text-s font-weight-bold mb-0">{{ $item->purchaseDate }}</span>
+                          </td>
+                          <td>
+                              <span class="text-s font-weight-bold mb-0">{{ $item->location->locationName ?? 'N/A' }}</span>
+                          </td>
+                          <td>
+                              <span class="text-s font-weight-bold mb-0">{{ $item->category->categoryName ?? 'N/A' }}</span>
+                          </td>
+                          <td>
+                              <a href="{{ route('item.edit', $item->id) }}" class="btx btx-primary mb-0 text-s">Lihat Barang</a>
+                          </td>
+                      </tr>
+                      @endforeach
+                  @endif
+              </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -96,7 +83,6 @@
 </main>
 
 @endsection
-
 @push('dashboard')
   <script>
     window.onload = function() {

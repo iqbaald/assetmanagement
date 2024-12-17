@@ -46,7 +46,7 @@
                     @enderror
                   </div>
                   <div class="text-center">
-                    <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">Masuk</button>
+                    <button type="submit" class="btx btx-primary w-100 my-4">Masuk</button>
                   </div>
                 </form>
               </div>

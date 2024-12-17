@@ -16,7 +16,7 @@ class Item extends Model
         'purchaseDate',
         'purchasePrice',
         'categoryId',
-        'categoryId',
+        'locationId',
     ];
 
     protected $cats = [

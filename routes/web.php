@@ -27,13 +27,14 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/', [HomeController::class, 'home']);
 	Route::get('/dashboard', [ItemController::class, 'index'])->name('item.index');
-    Route::get('/search', [ItemController::class, 'index'])->name('item.search');
+    Route::get('/search', [ItemController::class, 'showSearchPage'])->name('item.search.page');
+    Route::get('/search/results', [ItemController::class, 'search'])->name('item.search');
 
     Route::get('/add', [ItemController::class, 'create'])->name('item.create');
     Route::post('/add', [ItemController::class, 'store'])->name('item.store');
 
     Route::get('/edit/{id}', [ItemController::class, 'edit'])->name('item.edit');
-    Route::put('/edit/{id}', [ItemController::class, 'update'])->name('item.update');
+    Route::put('/item/{id}', [ItemController::class, 'update'])->name('item.update');
 
     Route::delete('/delete/{id}', [ItemController::class, 'destroy'])->name('item.destroy');
 

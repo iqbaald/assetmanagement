@@ -32,7 +32,7 @@
                       <span>{{ $item->id }}</span>
                     </td>
                     <td class="align-middle text-center text-s">
-                      <img src="../assets/img/{{ $item->itemPhoto }}" class="avatar avatar-xl" alt="">
+                      <img src="../img/items/{{ $item->itemPhoto }}" class="avatar avatar-xl" alt="">
                     </td>
                     <td>
                       <span class="text-s font-weight-bold mb-0">{{ $item->itemName }}</span>

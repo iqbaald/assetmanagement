@@ -31,50 +31,59 @@ class ItemController extends Controller
         return view('item.search', compact('items'));
     }
 
-    public function store(Request $request)
+    private function processProductName($name)
     {
-        dd($request->all());
-
-
-        $request->validate([
-            'itemName' => 'required|string|max:255',
-            'itemPhoto' => 'nullable|string|mimes:jpeg,png,jpg,gif|max:2048',
-            'conditionPercentage' => 'required|integer|min:0|:max:100',
-            'purchaseDate' => 'required|date',
-            'purchasePrice' => 'required|numeric',
-            'categoryId' => 'required|exists:category,categoryId',
-            'locationId' => 'required|exists:location,locationId',
-        ]);
-
-        if ($request->hasFile('itemPhoto')) {
-            $file = $request->file('itemPhoto');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('assets/img'), $filename);
-        } else {
-            dd('File tidak ada');
-        }
-        Item::create([
-            'itemName' => $request->itemName,
-            'itemPhoto' => $filename,
-            'conditionPercentage' => $request->conditionPercentage,
-            'purchaseDate' => $request->purchaseDate,
-            'purchasePrice' => $request->purchasePrice,
-            'categoryId' => $request->categoryId,
-            'locationId' => $request->locationId,
-        ]);
-
-        $categories = Category::all();
-        $locations = Location::all();
-
-        return redirect()->route('item.create' ,compact('categories', 'locations'))->with('success', 'Data Barang Telah Berhasil Ditambahkan.');
+        $words = explode(' ', $name);
+        $firstTwoWords = array_slice($words, 0, 2);
+        $processedName = implode('-', $firstTwoWords);
+        return strtolower($processedName);
     }
 
     public function create()
     {
-        $categories = Category::all(); 
-        $locations = Location::all(); 
+        $categories = Category::all();
+        $locations = Location::all();
+        return view('item.add', compact('categories','locations'));
+    }
 
-        return view('item.add', compact('categories', 'locations'));
+    public function store(Request $request)
+    {
+        $request->validate([
+            'itemName' => 'required|string|max:255',
+            'conditionPercentage' => 'required|integer|min:0|max:100',
+            'purchaseDate' => 'required|date',
+            'purchasePrice' => 'required|numeric|min:0',
+            'categoryId' => 'required|integer',
+            'locationId' => 'required|integer',
+            'itemPhoto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $item = new Item();
+        $item->itemName = $request->itemName;
+        $item->conditionPercentage = $request->conditionPercentage;
+        $item->purchaseDate = $request->purchaseDate;
+        $item->purchasePrice = $request->purchasePrice;
+        $item->categoryId = $request->categoryId;
+        $item->locationId = $request->locationId;
+
+
+        if ($request->hasFile('itemPhoto')) {
+            $processedName = $this->processProductName($item->itemName);
+            $image = $request->file('itemPhoto');
+            $fileExtension = $image->getClientOriginalExtension();
+            $fileName = $processedName . '-' . rand(100, 999) . '.' . $fileExtension;
+
+            $location = public_path('img/items');
+            $image->move($location, $fileName);
+
+            $item->itemPhoto = $fileName;
+        } else {
+            $item->itemPhoto = 'placeholder.jpeg';
+        }
+
+        $item->save();
+
+        return redirect()->route('item.index')->with('success', 'Data barang berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -103,21 +112,38 @@ class ItemController extends Controller
 
         return view('item.edit', compact('item', 'categories', 'locations', 'sellingPrice'));
     }
+    
 
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $request->validate([
             'itemName' => 'required|string|max:255',
-            'conditionPercentage' => 'required|numeric|min:0|max:100', 
-            'purchaseDate' => 'required|date', 
-            'purchasePrice' => 'required|numeric|min:0', 
-            'categoryId' => 'required|exists:categories,id', 
-            'locationId' => 'required|exists:locations,id',
-            'itemPhoto' => 'nullable|image|max:2048', 
+            'conditionPercentage' => 'required|integer|min:0|max:100',
+            'purchaseDate' => 'required|date',
+            'purchasePrice' => 'required|numeric|min:0',
+            'categoryId' => 'required|integer',
+            'locationId' => 'required|integer',
+            'itemPhoto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        
+        if ($request->hasFile('itemPhoto')) {
+            $processedName = $this->processProductName($request->itemName);
+            $image = $request->file('itemPhoto');
+            $fileExtension = $image->getClientOriginalExtension();
+            $fileName = $processedName . '-' . rand(100, 999) . '.' . $fileExtension;
+
+            $location = public_path('img/items');
+            $image->move($location, $fileName);
+
+            if ($request->itemPhoto && file_exists(public_path('img/items/' . $request->itemPhoto))) {
+                unlink(public_path('img/items/' . $request->itemPhoto));
+            }
+        }
+
         $item = Item::findOrFail($id);
-        dd($item);  
+
 
         $item->itemName = $request->itemName;
         $item->conditionPercentage = $request->conditionPercentage;
@@ -125,23 +151,14 @@ class ItemController extends Controller
         $item->purchasePrice = $request->purchasePrice;
         $item->categoryId = $request->categoryId;
         $item->locationId = $request->locationId;
+        $item->itemPhoto = $fileName;
 
-        // if ($request->hasFile('itemPhoto')) {
-        //     if ($item->itemPhoto) {
-        //         Storage::delete('public/photos/' . $item->itemPhoto);
-        //     }
 
-        //     $fileName = time() . '_' . $request->file('itemPhoto')->getClientOriginalName();
-        //     $request->file('itemPhoto')->storeAs('public/photos', $fileName);
-        //     $item->itemPhoto = $fileName;
-        // }
-
-        
         $item->save();
 
-
-        return redirect()->route('item.index')->with('success', 'Data barang berhasil diupdate!');
+        return redirect()->route('item.index')->with('success', 'Data barang berhasil diperbarui.');
     }
+
 
     public function destroy(string $id)
     {

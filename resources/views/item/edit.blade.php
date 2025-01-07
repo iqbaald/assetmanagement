@@ -13,7 +13,7 @@
         </div>
         <div class="card">
           <div class="card-body">
-            <form action="{{ route('item.update', $item->id) }}" method="POST">
+            <form action="{{ route('item.update', $item->id) }}" method="POST" enctype="multipart/form-data">
               @csrf
               @method('PUT')
               <div class="row g-3 mb-3">
